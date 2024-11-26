@@ -39,7 +39,7 @@ CHANNEL_CONFIGS:
     gamma_negative: 0.2
 
 
-  scoop: # otherwise you are free to name the channels as you like.
+  scoop: 
     input_channel: 0
     output_channel: 2
     type: angle
