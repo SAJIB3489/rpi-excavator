@@ -1,0 +1,124 @@
+# Configuration file for the sensors on the system
+
+ADC_CONFIG:
+  i2c_addresses:
+    b1: [0x6E, 0x6F]   # I2C address for board 1
+    # b2: [0, 0]         # I2C address PLACEHOLDER for board 2
+
+  pga_gain: 1
+  # Set the gain of the PGA on the chip
+  # Parameters: gain - 1, 2, 4, 8
+
+  bit_rate: 14
+  # Parameters: rate - 12, 14, 16, 18. Samples Per Second (SPS)
+  # 12 = 12 bit (240SPS max)
+  # 14 = 14 bit (60SPS max)
+  # 16 = 16 bit (15SPS max)
+  # 18 = 18 bit (3.75SPS max)
+
+  conversion_mode: 1
+  # Set the conversion mode for the ADC
+  # Parameters: mode - 0 = One-shot conversion, 1 = Continuous conversion
+  # (One-shot conversion) Perform a single conversion upon trigger, conserving power and resources for infrequent measurements
+  # (Continuous conversion) Continuously convert analog signals to digital, suitable for real-time monitoring
+
+
+FILTER_CONFIG:
+  default_filter: "low_pass"
+  # Specify the default filter to be used if not specified in individual sensors
+  # Options: "low_pass", "kalman"
+
+  low_pass:
+    alpha: 0.6
+    # Low-pass filter alpha value, 0 < alpha <= 1
+
+  kalman:
+    # Process noise covariance: This parameter represents the estimated variance of the process noise.
+    # Increasing this value makes the filter more responsive to changes in the state.
+    # If the system is expected to have more dynamic behavior or the model is less accurate, increase Q.
+    Q: 0.0001
+
+
+
+    # Measurement noise covariance: This parameter represents the estimated variance of the measurement noise.
+    # Decreasing this value increases the filter's reliance on the measurements rather than the model predictions.
+    # If the measurements are more reliable, decrease R. If the measurements are noisy, increase R.
+    R: 0.001
+
+
+    # Error covariance: This parameter represents the initial estimate of the uncertainty in the state estimate.
+    # A lower value means the filter starts with higher confidence in the initial estimate, leading to quicker adjustments.
+    # If the initial estimate is expected to be accurate, lower P. Otherwise, if unsure, a higher value may be used initially.
+    P: 0.7
+
+  # Optional: Individual sensor-specific filter configurations can be under the sensor if needed
+  # For example:
+  # sensor1:
+  #   ...
+  #   filter: "kalman"
+  #   Q: 1e-6
+  #   R: 1e-2
+  #   P: 1.0
+
+  # sensor2:
+  #   ...
+  #   filter: "low_pass"
+  #   alpha: 0.6
+
+
+#--------------------------------------------------------------
+
+RPM_SENSORS:
+  RPM_pump:
+    GPIO pin: 21
+    magnets: 14
+    # GPIO pin number for the sensor and the number of magnets on the rotating part
+
+
+#ANGLE_SENSORS:
+    # Excavator has none
+
+
+
+
+PRESSURE_SENSORS:
+  LiftBoom retract:
+    input: [b1, 1]                # [Board number, Port number]
+    calibration_value: 1.000      # Multiplier for calibrating measurements
+
+  LiftBoom extend:
+    input: [b1, 2]
+    calibration_value: 1.000
+
+  TiltBoom retract:
+    input: [b1, 3]
+    calibration_value: 1.000
+
+  TiltBoom extend:
+    input: [b1, 4]
+    calibration_value: 1.000
+
+  Scoop extend:
+    input: [b1, 5]
+    calibration_value: 1.000
+
+  Scoop retract:
+    input: [b1, 6]
+    calibration_value: 1.000
+
+  Pump pressure:
+    input: [b1, 7]
+    calibration_value: 1.000
+
+
+
+IMU_CONFIG:
+  multiplexer_address: 0x71
+  multiplexer_channels: [0, 1, 2, 3]
+  channel_names:
+    0: 'imu_scoop'
+    1: 'imu_tiltBoom'
+    2: 'imu_liftBoom'
+    3: 'imu_carriage'
+  accelerometer_data_rate: 'Rate.RATE_26_HZ'
+  gyro_data_rate: 'Rate.RATE_26_HZ'

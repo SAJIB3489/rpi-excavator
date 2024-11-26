@@ -1,0 +1,31 @@
+# Base configuration for the Excavator system
+
+# TODO: LISÄÄ PUUTTUVAT
+
+# System settings
+simulation: False
+num_outputs: 31  # 4x(3+3) IMU accelerometer and gyro data (read raw), 7 pressure sensors, 1 RPM sensor
+
+# Network settings
+addr: '192.168.0.131'  # Address where the HTTP server will run
+port: 8000  # Port for the HTTP server
+
+# PWM controller settings
+pwm_config: 'configuration_files/excavator_channel_configs.yaml'
+pump_variable: True
+tracks_disabled: True
+input_rate_threshold: 5
+deadzone: 1
+
+# Sensor settings. These can be used as "shortcuts" for the other configs.
+adc_config: 'configuration_files/excavator_sensor_configs.yaml'
+imu_config: 'configuration_files/excavator_sensor_configs.yaml'
+gpio_config: 'configuration_files/excavator_sensor_configs.yaml'
+decimals: 3
+
+# Logging
+log_level: 'DEBUG'  # INFO, DEBUG, WARNING, ERROR
+
+# Performance
+send_frequency: 10  # Hz, how often to send sensor data
+receive_frequency: 20  # Hz, how often to receive control data

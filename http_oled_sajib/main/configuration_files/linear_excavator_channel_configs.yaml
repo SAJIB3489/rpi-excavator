@@ -1,0 +1,117 @@
+# Config file for the test bench PWM hat
+# this one has linear control values (no gamma correction)
+
+
+CHANNEL_CONFIGS:
+
+  pump:
+    input_channel: None           # The index of the input data array. In Python, indexing is zero-based, meaning the first value is at index 0.
+    output_channel: 9             # The PWM hat output channel, same as printed on the PCB. Also Zero-based!
+    type: pump                    # type of the controlled thing. this is very WIP, just use "angle" for now
+    offset: 0                     # pump does not use this but im lazy, the validator checks this so just leave this to 0 for now
+    direction: 1                  # change direction. 1 or -1
+    idle: -0.10                   # this value gives nice idle speed when used to control the pump. ESC dependant.
+    multiplier: 2.0               # how much pump speeds up when "affects_pump" channels are active
+
+
+  trackR:
+    input_channel: 6
+    output_channel: 0
+    type: angle
+    affects_pump: false           # Set to True if you want this channel to inrease pump speed when the servo is moved.
+    offset: 0                     # Servo start point offset. 0 is the middle of the servo range (90).
+    direction: 1
+    multiplier_positive: 40       # Servo movement scaling factors. About the same as degrees. pos+neg is the full range of the servo.
+    multiplier_negative: 40
+    gamma_positive: 1.0           # Gamma correction factors for input values.
+    gamma_negative: 1.0           # = 1.0: Linear response (no correction).
+                                  # < 1.0: Makes the servo more responsive at the beginning of joystick movement
+                                  # > 1.0: Makes the servo more responsive at the end of joystick movement.
+  trackL:
+    input_channel: 7
+    output_channel: 1
+    type: angle
+    affects_pump: false
+    offset: 0
+    direction: 1
+    multiplier_positive: 40
+    multiplier_negative: 40
+    gamma_positive: 1.0
+    gamma_negative: 1.0
+
+
+  scoop:
+    input_channel: 0
+    output_channel: 2
+    type: angle
+    affects_pump: true
+    offset: 8
+    direction: -1
+    multiplier_positive: 50
+    multiplier_negative: 50
+    gamma_positive: 1.0
+    gamma_negative: 1.0
+
+  lift_boom:
+    input_channel: 1
+    output_channel: 3
+    type: angle
+    affects_pump: true
+    offset: 0
+    direction: -1
+    multiplier_positive: 50
+    multiplier_negative: 50
+    gamma_positive: 1.0
+    gamma_negative: 1.0
+
+
+  tilt_boom:
+    input_channel: 4
+    output_channel: 4
+    type: angle
+    affects_pump: true
+    offset: 5
+    direction: 1
+    multiplier_positive: 50
+    multiplier_negative: 50
+    gamma_positive: 1.0
+    gamma_negative: 1.0
+
+  rotate:
+    input_channel: 3
+    output_channel: 5
+    type: angle
+    affects_pump: false
+    offset: 5
+    direction: -1
+    multiplier_positive: 11
+    multiplier_negative: 11
+    gamma_positive: 1.0
+    gamma_negative: 1.0
+
+  tool1:
+    input_channel: 5
+    output_channel: 6
+    type: angle
+    affects_pump: false
+    offset: 0
+    direction: 1
+    multiplier_positive: 1
+    multiplier_negative: 1
+    gamma_positive: 1.0
+    gamma_negative: 1.0
+
+  tool2:
+    input_channel: 2
+    output_channel: 7
+    type: angle
+    affects_pump: true
+    offset: 0
+    direction: 1
+    multiplier_positive: 1
+    multiplier_negative: 1
+    gamma_positive: 1.0
+    gamma_negative: 1.0
+
+
+
