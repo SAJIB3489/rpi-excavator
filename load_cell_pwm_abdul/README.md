@@ -1,4 +1,5 @@
-#######Weight Measurement with HX711 and Raspberry Pi
+Weight Measurement with HX711 and Raspberry Pi
+----------------------------------------------
 This Python script interfaces with an HX711 load cell amplifier to measure weight using a load cell and a Raspberry Pi. The code captures the raw data from the HX711 and converts it to a meaningful weight value (in grams) by calibrating the scale with a known weight. The script continuously reads and prints the weight on the scale until it is interrupted.
 
 Prerequisites
@@ -10,17 +11,9 @@ Load Cell: The sensor used to measure weight.
 Python Libraries: The script requires the following libraries:
 RPi.GPIO: For interacting with the Raspberry Pi’s GPIO pins.
 hx711: The HX711 library for communicating with the HX711 load cell amplifier.
-You can install the necessary libraries using pip:
 
-bash
-Copy code
-pip install RPi.GPIO hx711
-Wiring Diagram
-The HX711 is connected to the Raspberry Pi via the GPIO pins:
 
-DOUT: Pin 21 (GPIO21)
-PD_SCK: Pin 20 (GPIO20)
-Make sure the load cell is connected to the HX711 amplifier module 
+
 
 ***********************************************************************
 #This is the code for example.py
@@ -93,7 +86,21 @@ finally:
 
 
 ************************************************************************************************
+How the Data is output:
+------------------------
 
+Data subtracted by offset but still not converted to units: 1050
+Mean value from HX711 subtracted by offset: 1050
+Write how many grams it was and press Enter: 500
+500.0 grams
+Ratio is set.
+Now, I will read data in infinite loop. To exit press 'CTRL + C'
+Press Enter to begin reading
+Current weight on the scale in grams is:
+505.0 g
+506.0 g
+507.0 g
+...
 
     
 
