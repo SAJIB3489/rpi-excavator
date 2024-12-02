@@ -1,73 +1,128 @@
-from flask import Flask, Response
+⁠ from flask import Flask, render_template, Response, request, redirect, url_for, jsonify
 import cv2
+import threading
 import os
-import signal
-from azure.storage.blob import BlobServiceClient
 from datetime import datetime
+from azure.storage.blob import BlobServiceClient
 
 app = Flask(__name__)
 
 # Azure Blob Storage configuration
-connection_string = "DefaultEndpointsProtocol=https;AccountName=iotprojectcamera;AccountKey=ehHx9Ci++fd5dk23WvK74SUeYFsCO9BNEe62wHJVsPCR0z2V3PHJVIIx0LlCVWlh1KgBZ9GdPldx+AStz4vuFg==;EndpointSuffix=core.windows.net"  # Replace with your Azure storage connection string
+connection_string = "DefaultEndpointsProtocol=https;AccountName=iotsavoooo;AccountKey=XKwdNyCuBmfUIM8PJmnL2eV1hrfuE9ayyGhFZwkW6O9d/b6OqhlisqPfLjvRX4+pcFemMmvI8+Gd+AStM5U66g==;EndpointSuffix=core.windows.net"  # Replace with your Azure storage connection string
 container_name = "video-uploads"  # Replace with your Azure Blob Storage container name
 blob_service_client = BlobServiceClient.from_connection_string(connection_string)
 
-# Variable to track streaming status and filename
-is_streaming = False
-exit_signal_received = False
-video_filename = ""  # Global variable to keep track of the current video filename
+# Global variables
+video_stream = cv2.VideoCapture(0)
+output_frame = None
+lock = threading.Lock()
+recording = False
+paused = False
+video_writer = None
+video_filename = ""
 
-# Function to generate a unique video file name based on the current timestamp
-def get_video_filename():
-    return f"recorded_stream_{datetime.now().strftime('%Y%m%d_%H%M%S')}.mp4"
+def generate_frames():
+    global output_frame, lock, video_writer, recording, paused
 
-def record_and_stream():
-    global is_streaming, video_filename
-    video_filename = get_video_filename()  # Get a unique file name for each recording
-    cap = cv2.VideoCapture(0)
-    if not cap.isOpened():
-        print("Error: Could not open the camera.")
-        raise RuntimeError("Error: Could not open the camera.")
-    
-    print("Camera opened successfully. Starting recording and streaming...")
-    print(f"Recording video to {video_filename}")
+    while True:
+        success, frame = video_stream.read()
+        if not success:
+            break
 
-    # Define video codec and create VideoWriter object to save the stream locally
-    fourcc = cv2.VideoWriter_fourcc(*'mp4v')
-    out = cv2.VideoWriter(video_filename, fourcc, 20.0, (640, 480))
+        with lock:
+            output_frame = frame.copy()
 
-    is_streaming = True
+            if recording and not paused:
+                if video_writer is not None:
+                    video_writer.write(frame)
 
-    try:
-        while is_streaming:
-            success, frame = cap.read()
-            if not success:
-                print("Error: Failed to capture frame.")
-                break
+        # Sleep for a short period to reduce CPU usage
+        cv2.waitKey(1)
 
-            # Write the frame to the video file
-            out.write(frame)
+def encode_frame():
+    global output_frame, lock
 
-            # Encode the frame in JPEG format
-            ret, buffer = cv2.imencode('.jpg', frame)
+    while True:
+        with lock:
+            if output_frame is None:
+                continue
+            ret, buffer = cv2.imencode('.jpg', output_frame)
             frame = buffer.tobytes()
+        yield (b'--frame\r\n'
+               b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
 
-            # Yield the output frame in byte format for streaming
-            yield (b'--frame\r\n'
-                   b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
-    finally:
-        cap.release()
-        out.release()
-        print("Recording stopped. Attempting to upload video to Azure Blob Storage...")
-        upload_to_azure(video_filename)
+@app.route('/')
+def index():
+    return render_template('index.html')
+
+@app.route('/video_feed')
+def video_feed():
+    return Response(encode_frame(), mimetype='multipart/x-mixed-replace; boundary=frame')
+
+@app.route('/control', methods=['POST'])
+def control():
+    global recording, paused, video_writer, video_filename
+
+    action = request.form.get('action')
+
+    if action == 'record':
+        if not recording:
+            video_filename = f"recorded_stream_{datetime.now().strftime('%Y%m%d_%H%M%S')}.mp4"
+            fourcc = cv2.VideoWriter_fourcc(*'mp4v')
+            fps = 20.0
+            frame_size = (int(video_stream.get(cv2.CAP_PROP_FRAME_WIDTH)),
+                          int(video_stream.get(cv2.CAP_PROP_FRAME_HEIGHT)))
+            video_writer = cv2.VideoWriter(video_filename, fourcc, fps, frame_size)
+            recording = True
+            paused = False
+            return jsonify(status='Recording started')
+        else:
+            return jsonify(status='Already recording')
+
+    elif action == 'pause_resume':
+        if recording:
+            paused = not paused
+            status = 'Paused' if paused else 'Resumed'
+            return jsonify(status=f'Recording {status}')
+        else:
+            return jsonify(status='Not recording')
+
+    elif action == 'stop':
+        if recording:
+            recording = False
+            paused = False
+            if video_writer is not None:
+                video_writer.release()
+                video_writer = None
+            # Start upload in a separate thread
+            threading.Thread(target=upload_to_azure, args=(video_filename,)).start()
+            return jsonify(status='Recording stopped and upload started')
+        else:
+            return jsonify(status='Not recording')
+
+    else:
+        return jsonify(status='Invalid action')
 
 def upload_to_azure(file_name):
-    blob_name = f"videos/{file_name}"  # Use the same unique name for the blob
-    blob_client = blob_service_client.get_blob_client(container=container_name, blob=blob_name)
-    
+    blob_name = f"videos/{file_name}"
+    container_client = blob_service_client.get_container_client(container_name)
+
+    try:
+        # Create the container if it does not exist
+        container_client.create_container()
+        print(f"Container '{container_name}' created.")
+    except Exception as e:
+        if "ContainerAlreadyExists" in str(e):
+            print(f"Container '{container_name}' already exists.")
+        else:
+            print(f"Failed to create or access container '{container_name}': {e}")
+            return
+
+    blob_client = container_client.get_blob_client(blob=blob_name)
+
     try:
         with open(file_name, "rb") as data:
-            blob_client.upload_blob(data)
+            blob_client.upload_blob(data, overwrite=True)
         print(f"Successfully uploaded {file_name} to Azure Blob Storage as {blob_name}")
     except Exception as e:
         print(f"Failed to upload {file_name} to Azure: {e}")
@@ -76,31 +131,13 @@ def upload_to_azure(file_name):
             os.remove(file_name)
             print(f"Local video file {file_name} deleted after upload.")
 
-@app.route('/')
-def index():
-    return "Welcome to the Webcam Live Stream. Go to /video_feed to view the stream."
-
-@app.route('/video_feed')
-def video_feed():
-    print("Video feed endpoint accessed. Starting live stream...")
-    return Response(record_and_stream(), mimetype='multipart/x-mixed-replace; boundary=frame')
-
-def handle_exit(*args):
-    global is_streaming, exit_signal_received, video_filename
-    if not exit_signal_received:  # Prevent multiple calls
-        print("Exit signal received. Stopping stream and uploading...")
-        exit_signal_received = True
-        is_streaming = False  # Stop streaming
-        # Call the upload function with the current video filename only once
-        if video_filename:
-            upload_to_azure(video_filename)
-        print("Upload completed. Exiting program.")
-        os._exit(0)  # Directly exit the process after upload completes
-
-# Register signal handler for graceful shutdown
-signal.signal(signal.SIGINT, handle_exit)
-signal.signal(signal.SIGTERM, handle_exit)
+def start_background_tasks():
+    # Start the frame generation thread
+    t = threading.Thread(target=generate_frames)
+    t.daemon = True
+    t.start()
 
 if __name__ == '__main__':
-    print("Starting Flask server...")
-    app.run(host='0.0.0.0', port=5000)
+    start_background_tasks()
+    app.run(host='0.0.0.0', port=5000, threaded=True)
+ ⁠
