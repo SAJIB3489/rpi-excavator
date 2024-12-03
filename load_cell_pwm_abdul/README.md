@@ -44,10 +44,45 @@ Ratio is set.
 Now, I will read data in infinite loop. To exit press 'CTRL + C'
 Press Enter to begin reading
 Current weight on the scale in grams is:
-505.0 g
-506.0 g
-507.0 g
+47.00 g
+46.00 g
+-17.98 g
 ...
 
+
+# How i made it work?
+-------------------
+
+Under my Folder - Abduls_Part, I created a virtual environment abdul_venv.
+
+```
+python3 -m venv abdul_venv
+```
+
+Then i had to activate it to get into my virtual env.
+
+```
+source abdul_venv/bin/activate
+```
+
+In my folder consisits of another folder hx711py within the folder Python_examples.
+
+Then i uninstalled the current gpio package and libraries assosicated with it.
+
+After further reasearch and finding the root cause of the issue that i was facing since the raspberry pi 5 was not compatible with the raspberry pi 4.
+
+The source link where I found it:
+
+https://stackoverflow.com/questions/78330125/gpio-programming-issues-in-python-3-for-raspberry-pi-5
+
+
+These were the commands i used: 
+
+```
+sudo apt remove python3-rpi.gpio 
+sudo apt install python3-rpi-lgpio
+```
+
+Then i made some changes in my final.py code for the new library to run which i cant recall exactly. I have 
     
 
