@@ -84,5 +84,16 @@ sudo apt install python3-rpi-lgpio
 ```
 
 Then i made some changes in my final.py code for the new library to run which i cant recall exactly. I have Calibrated the load cell first with the another code: Calibrate.py
+
+#Measuring a phone of roughly measuring: 105 grams.
+
+
+![WhatsApp Image 2024-12-03 at 17 38 22](https://github.com/user-attachments/assets/58bde09b-2df8-4f40-9f05-66eedec4ced3)
+
+
+#The results printed using the raspberry pi 5 with the code run:
+
     
+![WhatsApp Image 2024-12-03 at 17 38 24](https://github.com/user-attachments/assets/cece2b5d-bf6b-4571-acca-53bccbd0d6d8)
+
 
