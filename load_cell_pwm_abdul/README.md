@@ -83,6 +83,6 @@ sudo apt remove python3-rpi.gpio
 sudo apt install python3-rpi-lgpio
 ```
 
-Then i made some changes in my final.py code for the new library to run which i cant recall exactly. I have 
+Then i made some changes in my final.py code for the new library to run which i cant recall exactly. I have Calibrated the load cell first with the another code: Calibrate.py
     
 
