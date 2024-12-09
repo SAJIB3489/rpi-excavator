@@ -15,7 +15,7 @@ CHANNEL_CONFIGS:
 
   trackR: # names trackR and trackL also have special behavior! They are used to control the tracks of the excavator.
     input_channel: 4
-    output_channel: 0
+    output_channel: 7
     type: angle                   # even though tracks don't use angles, it's best to keep this as "angle" for now. Prob better to depreciate and just set output specific PWM range.
     affects_pump: false           # Set to True if you want this channel to inrease pump speed when the servo is moved.
     offset: 0                     # Servo start point offset. 0 is the middle of the servo range (90).
@@ -78,7 +78,7 @@ CHANNEL_CONFIGS:
 
   rotate:
     input_channel: 2
-    output_channel: 5
+    output_channel: 0
     type: angle
     affects_pump: false
     offset: 0
