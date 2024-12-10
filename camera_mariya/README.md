@@ -1,3 +1,21 @@
+### Docker
+
+Build the image
+```
+docker build --no-cache -t camera_app .
+```
+
+Create container
+
+```
+docker run -it --restart=always -d --name camera \
+  --device /dev/gpiomem \
+  --device /dev/ttyUSB0 \
+  --device /dev/ttyUSB1 \
+  --device /dev/video0 \
+  camera_app:latest
+  ```
+
 **Webcam Streaming and Recording with Flask and Azure Blob Storage**
 This Python application uses Flask to create a web-based interface for streaming live video from a webcam, recording it, and saving the recorded footage to Azure Blob Storage. Users can view the live feed, start/pause/resume/stop recording, and automatically upload videos to the cloud when recording is complete.
 

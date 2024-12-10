@@ -1,3 +1,23 @@
+### Docker
+
+Build the image
+```
+docker build --no-cache -t load_cell_app .
+```
+
+Create container
+
+```
+docker run -it --restart=always -d --name load_cell \
+  --device /dev/gpiomem \
+  --device /dev/ttyUSB0 \
+  --device /dev/ttyUSB1 \
+  --device /dev/video0 \
+  load_cell_app:latest
+  ```
+
+
+
 Weight Measurement with HX711 and Raspberry Pi
 ----------------------------------------------
 This Python script interfaces with an HX711 load cell amplifier to measure weight using a load cell and a Raspberry Pi. The code captures the raw data from the HX711 and converts it to a meaningful weight value (in grams) by calibrating the scale with a known weight. The script continuously reads and prints the weight on the scale until it is interrupted.
