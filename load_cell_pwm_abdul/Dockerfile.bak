@@ -43,14 +43,11 @@ RUN pip install --no-cache-dir \
     typing_extensions==4.12.2 && \
     rm -rf /var/lib/apt/lists/*
 
+# Copy all files from the current folder to the container
 COPY . /app
-COPY Montserrat-VariableFont_wght.ttf /usr/share/fonts/
 
 # Set the working directory
 WORKDIR /app
-    
-# Make the entrypoint script executable
-RUN chmod +x entrypoint.sh
-    
-# Set the entrypoint script as the default command
-ENTRYPOINT ["/app/entrypoint.sh"]
+
+# Set the command to run the main script
+CMD ["python", "final.py"]

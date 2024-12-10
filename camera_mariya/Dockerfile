@@ -1,13 +1,16 @@
-# Use a lightweight Python base image
-FROM python:3.9-slim
+FROM python:3.11-slim
 
 # Install system dependencies
-RUN apt-get update && apt-get install -y \
-    libgpiod2 python3-dev gcc && \
-    rm -rf /var/lib/apt/lists/*
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    libgpiod2 \
+    python3-dev \
+    gcc \
+    build-essential \
+    libusb-1.0-0-dev \
+    && rm -rf /var/lib/apt/lists/*
 
 # Install required Python packages
-RUN pip install \
+RUN pip install --no-cache-dir \
     Adafruit-Blinka==8.50.0 \
     adafruit-circuitpython-busdevice==5.2.10 \
     adafruit-circuitpython-connectionmanager==3.1.2 \

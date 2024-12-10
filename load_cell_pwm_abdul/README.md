@@ -20,17 +20,22 @@ sudo docker run -it --restart=always -d --name load_cell \
   load_cell_app:latest
   ```
 
-
-
+ Create container with OLED For network and Load Cell
 
 ```
-docker run -it --restart=always -d --name load_cell \
+sudo docker run -it --restart=always -d --name load_cell \
+  --privileged \
   --device /dev/gpiomem \
   --device /dev/ttyUSB0 \
   --device /dev/ttyUSB1 \
   --device /dev/video0 \
+  --device /dev/input \
+  --cap-add=NET_ADMIN
+  --net=host \
+  -v /var/run/dbus:/var/run/dbus \
   load_cell_app:latest
-  ```
+  ``` 
+
 
 
 
