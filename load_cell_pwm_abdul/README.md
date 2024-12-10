@@ -2,10 +2,26 @@
 
 Build the image
 ```
-docker build --no-cache -t load_cell_app .
+sudo docker build --no-cache -t load_cell_app .
 ```
 
 Create container
+
+```
+sudo docker run -it --restart=always -d --name load_cell \
+  --privileged \
+  --device /dev/gpiomem \
+  --device /dev/ttyUSB0 \
+  --device /dev/ttyUSB1 \
+  --device /dev/video0 \
+  --device /dev/input \
+  --net=host \
+  -v /var/run/dbus:/var/run/dbus \
+  load_cell_app:latest
+  ```
+
+
+
 
 ```
 docker run -it --restart=always -d --name load_cell \
