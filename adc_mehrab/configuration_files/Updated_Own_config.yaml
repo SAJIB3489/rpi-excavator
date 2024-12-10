@@ -1,102 +1,89 @@
-
-# import PWM (servo controller)
-import control_modules.PWM_controller as PWM_controller
-# import joystick module (evdev-version)
-import control_modules.joystick_evdev as joystick_module
-#import time for sleep
-from time import sleep
+# Config file for AI-MaSi excavator
 
 
-def main(pwm, controller):
-    step = 0
+CHANNEL_CONFIGS:
 
-    pwm.print_input_mappings()
-    sleep(5)
-
-    while True:
-
-        if not controller.is_connected():
-            # controller not connected, do nothing
-            pass
-        else:
-            # read all the joystick values
-            joy_values = controller.read()
-            #print(f"joystick values: {joy_values}")
+  pump: # name of the channel. Name "pump" is reserved for the pump control channel, and it has special behavior.
+    input_channel: None           # The index of the input data array. In Python, indexing is zero-based, meaning the first value is at index 0. Channel "pump" does not use direct control.
+    output_channel: 9             # The PWM hat output channel, same as printed on the PCB. Also Zero-based!
+    type: pump                    # type of the controlled thing. this is very WIP, just use "angle" for now
+    offset: 0                     # pump does not use this but im lazy, the validator checks this so just leave this to 0 for now
+    direction: 1                  # change direction. 1 or -1
+    idle: -0.15                 # this value gives nice idle speed when used to control the pump. ESC dependant. 0 would be ok
+    multiplier: 0.05             # how much pump speeds up when "affects_pump" channels are active
 
 
-            # we should modify the trigger values so that they can be flipped with bumper values
-
-            # flip the LeftTrigger and if the LeftBumper is pressed
-            if joy_values['LeftBumper']:
-                joy_values['LeftTrigger'] = -joy_values['LeftTrigger']
-
-            # flip the RightTrigger and if the RightBumper is pressed
-            if joy_values['RightBumper']:
-                joy_values['RightTrigger'] = -joy_values['RightTrigger']
-                
-                
-            if joy_values['A']:
-                # example, replace with your own logic
-                # enable tracks with A button
-                pwm.set_tracks(True)
-                
-            if joy_values['B']:
-                # example, replace with your own logic
-                # disable tracks with B button
-                pwm.set_tracks(False)
-                
-                
-            # example, increa pump stock speed
-            #if joy_values['DPadY']:
-                #pwm.update_pump(0.01, debug=True)
-                
-                
+  trackR: # names trackR and trackL also have special behavior! They are used to control the tracks of the excavator.
+    input_channel: 4
+    output_channel: 5
+    type: angle                   # even though tracks don't use angles, it's best to keep this as "angle" for now. Prob better to depreciate and just set output specific PWM range.
+    affects_pump: false           # Set to True if you want this channel to inrease pump speed when the servo is moved.
+    offset: 0                     # Servo start point offset. 0 is the middle of the servo range (90).
+    direction: 1
+    multiplier_positive: 30       # Servo movement scaling factors. About the same as degrees. pos+neg is the full range of the servo.
+    multiplier_negative: 30
+    gamma_positive: 1.0           # Gamma correction factors for input values.
+    gamma_negative: 1.0           # = 1.0: Linear response (no correction).
+                                  # < 1.0: Makes the servo more responsive at the beginning of joystick movement
+                                  # > 1.0: Makes the servo more responsive at the end of joystick movement.
+  trackL:
+    input_channel: 5
+    output_channel: 1
+    type: angle
+    affects_pump: false
+    offset: 0
+    direction: 1
+    multiplier_positive: 30
+    multiplier_negative: 30
+    gamma_positive: 1.0
+    gamma_negative: 1.0
 
 
-            # map the joystick values to the servo controller
-            controller_list = [
-                joy_values['RightJoystickX'], # scoop, index 0
-                joy_values['LeftJoystickY'],  # lift boom, index 1
-                joy_values['LeftJoystickX'],  # rotate cabin, index 2
-                joy_values['RightJoystickY'],  # tilt boom, index 3
-                joy_values['RightTrigger'],    # track R, index 4
-                joy_values['LeftTrigger'],   # track L, index 5
-            ]
+  scoop: # otherwise you are free to name the channels as you like.
+    input_channel: 0
+    output_channel: 2
+    type: angle
+    affects_pump: true
+    offset: 2
+    direction: -1
+    multiplier_positive: 30
+    multiplier_negative: 30
+    gamma_positive: 1.0
+    gamma_negative: 1.0
 
-            #print(f"giving input: {joy_values['LeftJoystickX']}")
-            print(controller_list)
-            # update the servo controller with the new values
-            pwm.update_values(controller_list)
-
-            # print every 20 steps
-            if step % 20 == 0:
-                rate = pwm.get_average_input_rate()
-                print(f"average input rate: {rate}")
-                step = 0
-
-        step += 1
-        sleep(0.01) # rough estimate of the loop time (100Hz)
-
-
-if __name__ == '__main__':
-
-    # initialize the servo controller
-    # you don't need to give all those arguments, but you can if you want to change the default values
-    pwm = PWM_controller.PWM_hat(
-        config_file='configuration_files/Own_config.yaml', # where your servo configuration is stored
-        simulation_mode=False,                             # set to True if you want to test without a servo controller
-        input_rate_threshold=10,                           # minimum input rate needed to enable the servo movement. Set to 0 to disable
-        deadzone=20,                                       # deadzone for the input values (% of the input range)
-        tracks_disabled=False,                             # set to true if you want to disable the tracked driving
-        pump_variable=True                                # set to true if you want to use the automatic pump control
-    )
+  lift_boom:
+    input_channel: 1
+    output_channel: 3
+    type: angle
+    affects_pump: true
+    offset: -5 # added
+    direction: -1
+    multiplier_positive: 30
+    multiplier_negative: 30
+    gamma_positive: 1.0
+    gamma_negative: 1.0
 
 
-    controller = joystick_module.XboxController()
+  tilt_boom:
+    input_channel: 3
+    output_channel: 4
+    type: angle
+    affects_pump: true
+    offset: 10
+    direction: 1
+    multiplier_positive: 30
+    multiplier_negative: 30
+    gamma_positive: 1.0
+    gamma_negative: 1.0
 
-    try:
-        # run the mainloop
-        main(pwm, controller)
-    except (KeyboardInterrupt, SystemExit):
-        print("Exiting...")
-        pwm.reset()
+  rotate:
+    input_channel: 2
+    output_channel: 0
+    type: angle
+    affects_pump: false
+    offset: 0
+    direction: -1
+    multiplier_positive: 11
+    multiplier_negative: 11
+    gamma_positive: 1.0
+    gamma_negative: 1.0
