@@ -37,5 +37,4 @@ docker run -it --restart=always -d --name adc \
 ``main.py`` execute ``Updated_Own_config.yaml`` ``PWM_controller.py`` ``joystick_evdev.py`` programmes for operating the excavator.
 
 #### Contributor
-Eetu Miettinen
-Joni Hänninen
+Eetu Miettinen and Joni Hänninen
