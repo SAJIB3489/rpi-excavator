@@ -124,5 +124,5 @@ This project provides a Python script to display real-time network and system st
   - Check that the paths in the systemd service file match your actual installation paths
 
 
-  #### Contributor
+  ### Contributor
   Eetu Miettinen, and Joni Hänninen
