@@ -24,9 +24,17 @@ docker run -it --restart=always -d --name adc \
   ```
 
 
-## How your code will work
+### Configuration_files
 
+``Updated_Own_config.yaml`` contains channel configuration for components of the excvator.
 
+###Control_modules
+
+``PWM_controller.py`` This module implements a PWM (Pulse Width Modulation) controller for servo motors and other PWM-controlled devices.
+``joystick_evdev.py`` contains mapping for Xbox controler.
+###main.py
+
+``main.py`` execute ``Updated_Own_config.yaml`` ``PWM_controller.py`` ``joystick_evdev.py`` programmes for operating the excavator.
 
 #### Contributor
 Eetu Miettinen
