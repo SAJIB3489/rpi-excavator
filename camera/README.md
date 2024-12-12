@@ -66,7 +66,7 @@ Designed a simple HTML interface using Flask to stream the webcam feed and add r
 Ensured the Azure Blob Storage library was correctly configured and tested uploads with sample files.
 **Key Features**
 1. Live Video Streaming
-Visit http://ip address:5001/ to view the live video feed.
+Visit http://ip_address:5001/ to view the live video feed.
 
 **2. Recording Controls**
 The web interface provides the following actions:
@@ -89,4 +89,4 @@ Once recording stops, the video file is automatically uploaded to Azure Blob Sto
 **Stop Recording:** Stop recording to trigger an upload to Azure Blob Storage.
 **Verify Upload:** Check the Azure Blob Storage container for the uploaded video.
 
-![IMG_6587](https://github.com/user-attachments/assets/36637f5c-d5a9-45a2-9f3d-f2b0420b3852)
+![image5](/attachment/camera2.jpeg)
