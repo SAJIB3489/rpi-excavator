@@ -11,3 +11,10 @@ This repository contains the software and hardware implementation for controllin
 
 
 The Excavator Control System enables wireless operation and monitoring of an excavator. Using a load cell sensor, we can measure the load on the boom and enforce a safety threshold for lifting heavy objects. The lighting system ensures visibility during operation and enhances the aesthetic appeal of the excavator. The project has automated the algorithmic process using a Docker container system.
+
+
+
+#### Project Brochure
+
+![image6](/attachment/brochure1.png)
+![image7](/attachment/brochure2.png)
