@@ -3,7 +3,7 @@
 
 CHANNEL_CONFIGS:
 
-  pump: # name of the channel. Name "pump" is reserved for the pump control channel, and it has special behavior.
+  pump:                           # name of the channel. Name "pump" is reserved for the pump control channel, and it has special behavior.
     input_channel: None           # The index of the input data array. In Python, indexing is zero-based, meaning the first value is at index 0. Channel "pump" does not use direct control.
     output_channel: 9             # The PWM hat output channel, same as printed on the PCB. Also Zero-based!
     type: pump                    # type of the controlled thing. this is very WIP, just use "angle" for now
@@ -13,7 +13,7 @@ CHANNEL_CONFIGS:
     multiplier: 0.05             # how much pump speeds up when "affects_pump" channels are active
 
 
-  trackR: # names trackR and trackL also have special behavior! They are used to control the tracks of the excavator.
+  trackR:                         # names trackR and trackL also have special behavior! They are used to control the tracks of the excavator.
     input_channel: 4
     output_channel: 5
     type: angle                   # even though tracks don't use angles, it's best to keep this as "angle" for now. Prob better to depreciate and just set output specific PWM range.
@@ -39,7 +39,7 @@ CHANNEL_CONFIGS:
     gamma_negative: 1.0
 
 
-  scoop: # otherwise you are free to name the channels as you like.
+  scoop:                          
     input_channel: 0
     output_channel: 2
     type: angle
