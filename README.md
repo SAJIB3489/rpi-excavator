@@ -1,8 +1,12 @@
 # RPi- Digger
 ### Raspberry Pi5 -Powered Excavator
 
+![image](/attachment/image.jpeg)
 
-Excavator Control System
+
+
+### Excavator Control System
+
 This repository contains the software and hardware implementation for controlling an RC excavator using a Raspberry Pi 5. The project includes a pressure sensor system for load detection and a lighting control system, ensuring efficient and safe operation.
 
 

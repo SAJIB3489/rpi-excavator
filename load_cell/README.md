@@ -2,13 +2,13 @@
 
 Build the image
 ```
-docker build --no-cache -t load_cell_app .
+sudo docker build --no-cache -t load_cell_app .
 ```
 
 Create container
 
 ```
-docker run -it --restart=always -d --name load_cell \
+sudo docker run -it --restart=always -d --name load_cell \
   --device /dev/gpiomem \
   --device /dev/ttyUSB0 \
   --device /dev/ttyUSB1 \

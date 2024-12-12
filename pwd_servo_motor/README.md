@@ -5,7 +5,7 @@
 
 Build the image
 ```
-docker build --no-cache -t adc_app .
+sudo docker build --no-cache -t adc_app .
 ```
 
 Create container

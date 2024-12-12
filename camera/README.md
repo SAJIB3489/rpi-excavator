@@ -2,13 +2,13 @@
 
 Build the image
 ```
-docker build --no-cache -t camera_app .
+sudo docker build --no-cache -t camera_app .
 ```
 
 Create container
 
 ```
-docker run -it --restart=always -d --name camera \
+sudo docker run -it --restart=always -d --name camera \
   --device /dev/gpiomem \
   --device /dev/ttyUSB0 \
   --device /dev/ttyUSB1 \
