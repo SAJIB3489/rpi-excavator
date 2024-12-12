@@ -1,5 +1,7 @@
 # OLED Network and System Status Display
 
+![image](/attachment/oled.png)
+
 This project provides a Python script to display real-time network and system status information on an SSD1306 OLED display. The script fetches data such as the active network interface, IP address, SSID, Wi-Fi signal strength (RSSI), and CPU temperature. The information is displayed dynamically and toggles between network information and CPU temperature every few seconds.
 
 ## Features

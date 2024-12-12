@@ -16,7 +16,7 @@ sudo docker run -it --restart=always -d --name load_cell \
   load_cell_app:latest
   ```
 
-
+![image3](/attachment/load_cell.png)
 
 Weight Measurement with HX711 and Raspberry Pi
 ----------------------------------------------

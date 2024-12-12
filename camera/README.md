@@ -15,11 +15,15 @@ sudo docker run -it --restart=always -d --name camera \
   --device /dev/video0 \
   camera_app:latest
   ```
+![image4](/attachment/camera.png)
 
-**Webcam Streaming and Recording with Flask and Azure Blob Storage**
+
+
+## Webcam Streaming and Recording with Flask and Azure Blob Storage
+
 This Python application uses Flask to create a web-based interface for streaming live video from a webcam, recording it, and saving the recorded footage to Azure Blob Storage. Users can view the live feed, start/pause/resume/stop recording, and automatically upload videos to the cloud when recording is complete.
 
-**Prerequisites**
+### Prerequisites
 Before running the script, ensure you have the following:
 
 **Hardware:**
@@ -34,7 +38,7 @@ The script relies on these Python libraries:
 **OpenCV:** For video capture and frame processing.
 **Azure Storage Blob:** For uploading videos to Azure.
 
-**How the Code Works**
+## How the Code Works
 **Live Streaming:**
 The generate_frames function continuously captures frames from the webcam and streams them to a web page using Flask’s /video_feed route.
 
@@ -45,7 +49,8 @@ The generate_frames function continuously captures frames from the webcam and st
 **Azure Blob Upload:**
 After recording stops, the video file is uploaded to Azure using the BlobServiceClient. The local file is deleted after successful upload to free up space.
 
-**How I Made It Work**
+## How it Works
+
 **Set Up Azure Storage:**
 
 Created a container named video-uploads in Azure Blob Storage.
