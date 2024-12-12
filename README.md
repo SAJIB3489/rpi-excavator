@@ -14,7 +14,12 @@ The Excavator Control System enables wireless operation and monitoring of an exc
 
 
 
-#### Project Brochure
+
+
+
+### Project Brochure
+
 
 ![image6](/attachment/brochure1.png)
+
 ![image7](/attachment/brochure2.png)
