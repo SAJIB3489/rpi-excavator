@@ -125,5 +125,4 @@ This project provides a Python script to display real-time network and system st
 
 
   #### Contributor
-  Eetu Miettinen
-  Joni Hänninen
+  Eetu Miettinen, and Joni Hänninen
