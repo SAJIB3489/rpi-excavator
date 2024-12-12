@@ -8,8 +8,8 @@ CHANNEL_CONFIGS:
     output_channel: 9             # The PWM hat output channel, same as printed on the PCB. Also Zero-based!
     type: pump                    # type of the controlled thing. this is very WIP, just use "angle" for now
     offset: 0                     # pump does not use this but im lazy, the validator checks this so just leave this to 0 for now
-    direction: 1                  # change direction. 1 or -1
-    idle: -0.15                 # this value gives nice idle speed when used to control the pump. ESC dependant. 0 would be ok
+    direction: 1                 # change direction. 1 or -1
+    idle: -0.15                  # this value gives nice idle speed when used to control the pump. ESC dependant. 0 would be ok
     multiplier: 0.05             # how much pump speeds up when "affects_pump" channels are active
 
 
