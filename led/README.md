@@ -1,3 +1,5 @@
-## Explain your code here
+## Run the code
 
-## How your code will work
+```
+python3 main.py
+```
