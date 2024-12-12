@@ -3,9 +3,6 @@
 
 ![image](/attachment/image.jpeg)
 
-```
-link
-```
 
 ### Excavator Control System
 
