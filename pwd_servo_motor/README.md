@@ -11,7 +11,7 @@ sudo docker build --no-cache -t adc_app .
 Create container
 
 ```
-docker run -it --restart=always -d --name adc \
+sudo docker run -it --restart=always -d --name adc \
   --privileged \
   --device /dev/gpiomem \
   --device /dev/ttyUSB0 \
